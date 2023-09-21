@@ -105,7 +105,7 @@
   }
 
   .input:hover{
-    border: solid 0.1rem #3597FF;
+    border: solid 0.1rem #49D191;
 
     transition: 0.2s;
   }
@@ -124,8 +124,8 @@
   }
 
   .add:hover{
-    border: solid 0.1rem #3597FF;
-    color: #3597FF;
+    border: solid 0.1rem #49D191;
+    color: #49D191;
 
     transition: 0.2s;
   }

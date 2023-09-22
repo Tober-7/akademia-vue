@@ -1,8 +1,25 @@
 <template>
   <div class="div-container">
-    <div class="div-container-item div-container-item-bb">
+    <div class="div-container-item-row div-container-item-bb">
       <input class="input" type="text" v-model="input">
       <button class="add" @click="addItem()">Add</button>
+    </div>
+    <div class="div-container-item-column div-container-item-bb">
+      <span class="text-title">Položky</span>
+      <ul v-for="item in validItems" :key="`item-${item.id}`">
+        <li class="list-item">
+          <span class="delete" @click="deleteItem(item)">X</span>
+          {{ item.text }}
+        </li>
+      </ul>    
+    </div>
+    <div class="div-container-item-column">
+      <span class="text-title">Zmazané Položky</span>
+      <ul v-for="item in deletedItems" :key="`item-${item.id}`">
+        <li class="list-item">
+          {{ item.text }}
+        </li>
+      </ul>    
     </div>
   </div>
 </template>
@@ -15,6 +32,17 @@
         list: [],
       }
     },
+
+    computed: {
+      validItems() {
+        return this.list.filter(item => !item.is_deleted)
+      },
+
+      deletedItems() {
+        return this.list.filter(item => item.is_deleted)
+      }
+    },
+
     methods: {
       addItem() {
         this.list.push({
@@ -23,12 +51,15 @@
           is_deleted: false
         })
         this.input = ""
+      },
+      deleteItem(item) {
+        item.is_deleted = true
       }
     },
   }
 </script>
 
-<style scoped>
+<style>
   /*#region Fonts*/
 
   @font-face {
@@ -59,6 +90,8 @@
 
   /*#endregion*/
 
+  /*#region General*/
+
   .div-container{
     display: flex;
     flex-direction: column;
@@ -72,9 +105,17 @@
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.15);
   }
 
-  .div-container-item{
+  .div-container-item-row{
     display: flex;
     justify-content: center;
+
+    margin: 24px;
+  }
+
+  .div-container-item-column{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     margin: 24px;
   }
@@ -82,8 +123,13 @@
   /* bb = border bottom*/
   .div-container-item-bb{
       padding-bottom: 24px;
-      border-bottom: solid 1px #202020;
+      margin-bottom: 0;
+      border-bottom: solid 0.1rem #202020;
   }
+
+  /*#endregion*/
+
+  /*#region Input Section*/
 
   .input{
     min-width: 100px;
@@ -129,4 +175,66 @@
 
     transition: 0.2s;
   }
+
+  /*#endregion*/
+
+  /*#region Item Section*/
+
+  .text-title{
+    cursor: default;
+
+    margin: 0 0 24px 0;
+
+    font-size: 40px;
+    color: #202020;
+    letter-spacing: 1px;
+  }
+
+  ul{
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+
+    padding: 0;
+    margin: 0;
+
+    list-style-type: none;
+  }
+
+  .list-item{
+    cursor: default;
+
+    display: flex;
+
+    max-width: 100%;
+
+    padding: 8px;
+    margin: 12px 0;
+
+    overflow: hidden;
+    color: #202020;
+    letter-spacing: 1px;
+
+    border-radius: 5px;
+
+    border: solid 0.1rem #202020;
+  }
+
+  .delete{
+    cursor: pointer;
+
+    margin: 0 12px 0 0;
+
+    transition: 0.2s;
+  }
+
+  .delete:hover{
+    color: #FF0000;
+
+    transition: 0.2s;
+  }
+
+  /*#endregion*/
+  
 </style>

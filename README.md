@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-npm install !!! Because the node_modules file is not uploaded to git
+npm install
 ```
 
 ### Compiles and hot-reloads for development

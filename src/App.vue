@@ -1,15 +1,15 @@
 <template>
   <div class="div-container">
     <div class="div-container-item-row div-container-item-bb">
-      <input class="input" type="text" v-model="input">
-      <button class="add" @click="addItem()">Add</button>
+      <input class="input" type="text" v-model="input" @input="checkAdd" v-on:keyup.enter="addItem">
+      <button class="add add-locked" @click="addItem()">Add</button>
     </div>
     <div class="div-container-item-column div-container-item-bb">
       <span class="text-title">Položky</span>
       <ul v-for="item in validItems" :key="`item-${item.id}`">
         <li class="list-item">
           <span class="delete" @click="deleteItem(item)">X</span>
-          {{ item.text }}
+          {{ item.text.trim() }}
         </li>
       </ul>    
     </div>
@@ -17,7 +17,7 @@
       <span class="text-title">Zmazané Položky</span>
       <ul v-for="item in deletedItems" :key="`item-${item.id}`">
         <li class="list-item">
-          {{ item.text }}
+          {{ item.text.trim() }}
         </li>
       </ul>    
     </div>
@@ -29,6 +29,7 @@
     data() {
       return {
         input: "",
+        canAdd: false,
         list: [],
       }
     },
@@ -45,15 +46,33 @@
 
     methods: {
       addItem() {
-        this.list.push({
-          id: this.list.length + 1,
-          text: this.input,
-          is_deleted: false
-        })
-        this.input = ""
+        if (this.canAdd)
+        {
+          this.list.push({
+            id: this.list.length + 1,
+            text: this.input,
+            is_deleted: false
+          })
+          this.input = "",
+          this.checkAdd()
+        }
       },
       deleteItem(item) {
         item.is_deleted = true
+      },
+      checkAdd() {
+        if (this.input.trim() !== "")
+        {
+          document.querySelector(".add").classList.remove("add-locked"),
+
+          this.canAdd = true
+        }
+        else
+        {
+          document.querySelector(".add").classList.add("add-locked"),
+
+          this.canAdd = false
+        }
       }
     },
   }
@@ -165,6 +184,15 @@
 
     background-color: transparent;
     border: solid 0.1rem #202020;
+
+    transition: 0.2s;
+  }
+
+  .add-locked{
+    pointer-events: none;
+    cursor: default;
+
+    opacity: 0.5;
 
     transition: 0.2s;
   }

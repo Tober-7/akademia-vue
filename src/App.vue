@@ -1,8 +1,8 @@
 <template>
   <div class="div-container">
     <div class="div-container-item-row div-container-item-bb">
-      <input class="input" type="text" v-model="input" @input="checkAdd" v-on:keyup.enter="addItem">
-      <button class="add add-locked" @click="addItem()">Add</button>
+      <input class="input" type="text" v-model="input" @keyup.enter="addItem">
+      <button class="add" :disabled="isAddDisabled" @click="addItem()">Add</button>
     </div>
     <div class="div-container-item-column div-container-item-bb">
       <span class="text-title">Položky</span>
@@ -29,7 +29,6 @@
     data() {
       return {
         input: "",
-        canAdd: false,
         list: [],
       }
     },
@@ -41,38 +40,26 @@
 
       deletedItems() {
         return this.list.filter(item => item.is_deleted)
+      },
+
+      isAddDisabled() {
+        return this.input.trim() == "" ? true : false;
       }
     },
 
     methods: {
       addItem() {
-        if (this.canAdd)
-        {
-          this.list.push({
-            id: this.list.length + 1,
-            text: this.input,
-            is_deleted: false
-          })
-          this.input = "",
-          this.checkAdd()
-        }
+        if (this.input.trim() == "") return;
+
+        this.list.push({
+          id: this.list.length + 1,
+          text: this.input,
+          is_deleted: false
+        })
+        this.input = ""
       },
       deleteItem(item) {
         item.is_deleted = true
-      },
-      checkAdd() {
-        if (this.input.trim() !== "")
-        {
-          document.querySelector(".add").classList.remove("add-locked"),
-
-          this.canAdd = true
-        }
-        else
-        {
-          document.querySelector(".add").classList.add("add-locked"),
-
-          this.canAdd = false
-        }
       }
     },
   }
@@ -188,7 +175,7 @@
     transition: 0.2s;
   }
 
-  .add-locked{
+  .add:disabled{
     pointer-events: none;
     cursor: default;
 
